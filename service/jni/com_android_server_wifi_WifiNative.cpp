@@ -118,6 +118,11 @@ static jboolean android_net_wifi_setMode(JNIEnv* env, jobject, jint type)
     return (jboolean)(::wifi_set_mode(type) == 0);
 }
 
+static jboolean android_net_wifi_setMode(JNIEnv* env, jobject, jint type)
+{
+    return (jboolean)(::wifi_set_mode(type) == 0);
+}
+
 static jboolean android_net_wifi_isDriverLoaded(JNIEnv* env, jobject)
 {
     return (::is_wifi_driver_loaded() == 1);
