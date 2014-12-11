@@ -4934,8 +4934,11 @@ public class WifiStateMachine extends StateMachine {
                     startNextBatchedScan();
                     break;
                 case CMD_SCREEN_STATE_CHANGED:
-                    handleScreenStateChanged(message.arg1 != 0,
-                            /* startBackgroundScanIfNeeded = */ false);
+                    WifiManager manager = (WifiManager)mContext.getSystemService(Context.WIFI_SERVICE);
+                    if(manager.isWifiEnabled()) {
+                        handleScreenStateChanged(message.arg1 != 0,
+                                /* startBackgroundScanIfNeeded = */ false);
+                    }
                     break;
                     /* Discard */
                 case CMD_START_SCAN:
