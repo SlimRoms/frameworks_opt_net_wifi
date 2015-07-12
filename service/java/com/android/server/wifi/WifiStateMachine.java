@@ -2431,10 +2431,23 @@ public class WifiStateMachine extends StateMachine {
         // for now (it is unclear what the chipset should do when
         // country code is reset)
         int countryCodeSequence = mCountryCodeSequence.incrementAndGet();
-        if (TextUtils.isEmpty(countryCode)) {
-            log("Ignoring resetting of country code");
+        String overrideCode = Settings.Global.getString(mContext.getContentResolver(),
+                Settings.Global.WIFI_COUNTRY_OVERRIDE);
+        overrideCode = (overrideCode == null ? "mcc" : overrideCode);
+        if (overrideCode.equalsIgnoreCase("mcc") || overrideCode.isEmpty()) {
+            if (TextUtils.isEmpty(countryCode)) {
+                log("Ignoring resetting of country code");
+            } else {
+                log("Setting of country code using mcc to : '" +
+                        countryCode + "'");
+                sendMessage(CMD_SET_COUNTRY_CODE, countryCodeSequence,
+                        persist ? 1 : 0, countryCode);
+            }
         } else {
-            sendMessage(CMD_SET_COUNTRY_CODE, countryCodeSequence, persist ? 1 : 0, countryCode);
+            log("Overriding of country code '" + countryCode +
+                    "' with : '" + overrideCode + "'");
+            sendMessage(CMD_SET_COUNTRY_CODE, countryCodeSequence,
+                    persist ? 1 : 0, overrideCode);
         }
     }
 
